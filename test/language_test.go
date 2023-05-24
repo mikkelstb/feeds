@@ -56,4 +56,8 @@ func TestEditDistance(t *testing.T) {
 	if r := vocabulary.EditDistance([]rune("dr"), []rune("politics")); r != 8 {
 		t.Errorf("editdistance was %d should have been 8", r)
 	}
+
+	if r := vocabulary.EditDistance([]rune("københavn"), []rune("kobenhavnl")); r != 2 {
+		t.Errorf("editdistance was %d should have been 2", r)
+	}
 }

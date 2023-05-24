@@ -1,7 +1,6 @@
 package feeds
 
 import (
-	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
@@ -11,34 +10,37 @@ import (
 )
 
 type NewsItem struct {
-	Feed      string `json:"feed"`
-	Source    string `json:"source"`
-	FeedId    int    `json:"feedId"`
-	Mediatype string `json:"mediatype"`
-	Headline  string `json:"headline"`
-	Story     string `json:"story"`
-	Url       string `json:"url"`
-	Language  string `json:"language"`
-	Country   string `json:"country"`
-	Docdate   string `json:"docdate"`
-	FetchTime string `json:"fetchTime"`
-	Id        string `json:"id"`
-	LocalId   string `json:"localId"`
+	SourceName string              `json:"sourceName"`
+	SourceId   int                 `json:"sourceID"`
+	FeedName   string              `json:"feedName"`
+	Mediatype  string              `json:"mediatype"`
+	Headline   string              `json:"headline"`
+	Story      string              `json:"story"`
+	Url        string              `json:"url"`
+	Language   string              `json:"language"`
+	Country    string              `json:"country"`
+	Docdate    string              `json:"docdate"`
+	FetchTime  string              `json:"fetchTime"`
+	Id         string              `json:"id"`
+	LocalId    string              `json:"localId"`
+	Categories map[string][]string `json:"category"`
 }
 
-/*
-	ID() returns a "unique" four letter id based on headline and story
-*/
+// Helper struct in order to serialize NewsItem to JSON
+type IdNewsItem NewsItem
 
+/*
+GetId() returns a "unique" four letter id based on local id.
+If local id is not present, use headline
+*/
 func (ni NewsItem) GetId() string {
 	id := md5.New()
-
-	if len(ni.LocalId) > 0 {
+	if ni.LocalId != "" {
 		io.WriteString(id, ni.LocalId)
 	} else {
 		io.WriteString(id, ni.Headline)
 	}
-	return fmt.Sprintf("%02d%v%v", ni.FeedId, ni.GetDocdate().Format("060102"), hex.EncodeToString(id.Sum(nil))[0:8])
+	return fmt.Sprintf("%02d%v%v", ni.SourceId, ni.GetDocdate().Format("060102"), hex.EncodeToString(id.Sum(nil))[0:4])
 }
 
 func (ni NewsItem) GetDocdate() time.Time {
@@ -46,14 +48,16 @@ func (ni NewsItem) GetDocdate() time.Time {
 	return dd
 }
 
-func (ni NewsItem) ToJson() ([]byte, error) {
+func (ni *NewsItem) SetDocdate(t time.Time) {
+	ni.Docdate = t.Format(time.RFC3339)
+}
 
-	buffer := bytes.Buffer{}
-	jsn_encoder := json.NewEncoder(&buffer)
-	jsn_encoder.SetIndent("", " ")
-
-	ni.Id = ni.GetId()
-	err := jsn_encoder.Encode(ni)
-
-	return buffer.Bytes(), err
+func (ni NewsItem) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Id string `json:"id"`
+		IdNewsItem
+	}{
+		Id:         ni.GetId(),
+		IdNewsItem: IdNewsItem(ni),
+	})
 }

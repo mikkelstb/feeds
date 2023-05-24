@@ -1,0 +1,22 @@
+<div class="title">Headline<span class="box">▤</span>Tracker</div>
+<div class="subtitle">
+    <form method="get" id="searchform" action="/headline/search/">
+        <a href="/headline/latest">Latest</a> |
+        <a href="/headline/latest">Stats</a> |
+        <a href="/headline/latest">About</a> |
+        <span style="float: right;">
+            <input class="searchform" type="text" name="searchtext" value="{{index .Form "query" -}}">
+            <select name="language" id="language">
+                {{- range $lang, $selected := .Languages }}
+                    {{- if $selected }}
+                    <option selected value="{{ $lang }}">{{ $lang }}</option>
+                    {{- else }}
+                    <option value="{{ $lang }}">{{ $lang }}</option>
+                    {{- end }}
+                {{- end }}
+            </select>
+            <input type="submit" id="search" value="Search">
+        </span>
+    </form>
+    <hr />
+</div>

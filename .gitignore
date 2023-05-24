@@ -2,3 +2,5 @@ config.json
 .DS_Store
 cmd/*/*
 !cmd/*/*.go
+public_html/
+.vscode/launch.json

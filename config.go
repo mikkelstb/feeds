@@ -6,20 +6,29 @@ import (
 )
 
 type Config struct {
-	Logs         map[string]string           `json:"logs"`
-	Repositories map[string]RepositoryConfig `json:"repositories"`
-	Sources      []SourceConfig              `json:"sources"`
+	Apps         map[string]map[string]string `json:"apps"`
+	Repositories map[string]RepositoryConfig  `json:"repositories"`
+	Sources      []SourceConfig               `json:"sources"`
+	Indices      map[string]IndexConfig       `json:"indices"`
 }
 
 type SourceConfig struct {
-	Active      bool              `json:"active"`
-	Id          int               `json:"id"`
-	Name        string            `json:"name"`
-	Screen_name string            `json:"screen_name"`
-	Country     string            `json:"country"`
-	Language    string            `json:"language"`
-	Mediatype   string            `json:"mediatype"`
-	Feed        map[string]string `json:"feed"`
+	Id        int                   `json:"id"`
+	Name      string                `json:"name"`
+	Country   string                `json:"country"`
+	Language  string                `json:"language"`
+	Mediatype string                `json:"mediatype"`
+	Active    bool                  `json:"active"`
+	Feeds     map[string]FeedConfig `json:"feeds"`
+}
+
+type FeedConfig struct {
+	Active         bool   `json:"active"`
+	Name           string `json:"name"`
+	Datatype       string `json:"datatype"`
+	Url            string `json:"url"`
+	DocdateLayout  string `json:"docdate_layout"`
+	StoryMinLength int    `json:"story_min_length"`
 }
 
 type RepositoryConfig struct {
@@ -27,6 +36,11 @@ type RepositoryConfig struct {
 	Address        string `json:"address"`
 	Active         bool   `json:"active"`
 	EraseAfterDays int    `json:"erase_after_days"`
+}
+
+type IndexConfig struct {
+	Active   bool   `json:"active"`
+	Language string `json:"language"`
 }
 
 func ReadConf(filename string) (*Config, error) {

@@ -1,0 +1,16 @@
+<div class="langmenu" open="false">
+    <form id="filter" method="post">
+        <p>☰ Filters</p>
+        <div class="checkboxes">
+            {{ range $iso, $lang  := . }}
+            {{ if $lang.Checked }}
+            <label><input type="checkbox" checked name="lang" value="{{ $iso }}"> {{ $lang.Name }}</label><br>
+            {{ else }}
+            <label><input type="checkbox" name="lang" value="{{ $iso }}"> {{ $lang.Name }}</label><br>
+            {{ end }}
+            {{ end }}
+            <br>
+        </div>
+    </form>
+    <hr />
+</div>

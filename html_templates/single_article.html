@@ -1,0 +1,17 @@
+<!Doctype html>
+<html>
+{{ template "header.html" .}}
+
+<body>
+    <div class="mainList">
+        {{ template "top.html" .}}
+        <div class="article_list">
+        {{ range $newsitem := .Articles }}
+            {{ template "article_detail.html" .}}
+        {{- end }}
+        </div>
+        
+        <hr>
+    </div>
+</body>
+</html>

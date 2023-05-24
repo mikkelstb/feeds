@@ -1,0 +1,18 @@
+<!Doctype html>
+<html>
+{{ template "header.html" .}}
+
+<body>
+    <div class="mainList">
+        {{ template "top.html" .}}
+        {{ if index .Form "suggestion"}} <div class="suggestion>"> <u><a href="{{index .Form "suggestion_link"}}">Did you mean {{index .Form "suggestion"}}</a>?</u></div> {{ else }} {{ end }}
+        <div class="article_list">
+        {{ range $newsitem := .Articles }}
+            {{ template "article.html" .}}
+        {{- end }}
+        </div>
+        <hr>
+    </div>
+</body>
+
+</html>
